@@ -86,7 +86,7 @@ def scan_wifi_networks():
                     except AttributeError:
                         security_type = "Not available"
                     networkList.append(network.ssid())
-                    security_types.append(security_type)
+                    security_types.append(str(security_type))
 
             return networkList, security_types
 

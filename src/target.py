@@ -1,45 +1,67 @@
 import os
 import sys
+from typing import List
 
+def display_wifi_networks(networks: List[str], security_type: List[str]) -> None:
+    """
+    Display a formatted list of available WiFi networks with their security types.
 
-def display_targets(networks, security_type):
-    print("Select a target: \n")
+    Args:
+        networks: List of network SSIDs
+        security_type: List of security types corresponding to each network
+    """
+
+    print("Available WiFi networks:\n")
+
     try:
-        rows, columns = os.popen("stty size", "r").read().split()
-        columns = int(columns)
-        for i in range(len(networks)):
-            # Ensure all components are strings
-            num = str(i + 1)
-            ssid = str(networks[i])
-            security = str(security_type[i])  # Convert to string to avoid OC_PythonLong
-            # Compute width with string concatenation
-            display_text = f"{num}. {ssid}{security}"
-            width = len(display_text) + 2
-            spacer = " "
+        # Get terminal size or use fallback values
+        try:
+            columns = os.get_terminal_size().columns
+        except (AttributeError, OSError):
+            try:
+                columns = int(os.popen("stty size", "r").read().split()[1])
+            except (IndexError, ValueError):
+                columns = 80  # Default width if all else fails
 
+        # Display each network with formatted spacing
+        for i, (ssid, security) in enumerate(zip(networks, security_type), 1):
+            # Calculate display formatting
+            prefix = f"{i}. {ssid}"
+            suffix = str(security)  # Convert security to string to ensure len() works
+
+            # Calculate dots padding
+            dots_length = max(2, columns - len(prefix) - len(suffix) - 2)
             if columns >= 100:
-                calc = int((columns - width) * 0.75)
-            else:
-                calc = columns - width
+                dots_length = int(dots_length * 0.75)
 
-            for index in range(calc):
-                spacer += "."
-                if index == calc - 1:
-                    spacer += " "
+            dots = "." * dots_length
 
-            print(f"{num}. {ssid}{spacer}{security}")
+            print(f"{prefix} {dots} {suffix}")
+
     except Exception as e:
-        print(f"Error displaying targets: {e}")
-        sys.exit(-1)
+        print(f"Error displaying targets: {e}", file=sys.stderr)
+        sys.exit(1)
 
 
-def prompt_for_target_choice(max):
+def select_wifi_network(max_options: int) -> int:
+    """
+    Prompt user to select a target network by number.
+
+    Args:
+        max_options: Maximum number of valid options
+
+    Returns:
+        Zero-based index of the selected network
+    """
     while True:
         try:
-            selected = int(input("\nEnter number of target: "))
-            if selected >= 1 and selected <= max:
-                return selected - 1
-        except Exception:
-            pass
+            selected = input(f"\nSelect WiFi network (1-{max_options}): ")
+            selected_num = int(selected)
 
-        print("Invalid choice: Please pick a number between 1 and " + str(max))
+            if 1 <= selected_num <= max_options:
+                return selected_num - 1
+
+            print(f"Invalid selection. Please choose a number from 1 to {max_options}.")
+
+        except ValueError:
+            print(f"Not a number. Please enter a digit from 1 to {max_options}.")

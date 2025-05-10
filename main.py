@@ -2,7 +2,7 @@ from src.argument import parse_arguments
 from src.util import clear, display_header
 from src.password import get_local_passwords
 from src.scan import scan_wifi_networks
-from src.target import display_targets, prompt_for_target_choice
+from src.target import display_wifi_networks, select_wifi_network
 from src.brute_force import brute_force
 
 
@@ -15,9 +15,9 @@ def main():
 
     networks, security_type = scan_wifi_networks()
 
-    display_targets(networks, security_type)
+    display_wifi_networks(networks, security_type)
 
-    pick = prompt_for_target_choice(len(networks))
+    pick = select_wifi_network(len(networks))
 
     target = networks[pick]
 
