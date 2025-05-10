@@ -1,6 +1,8 @@
 import argparse
 import os
+from pathlib import Path
 
+DATA_DIR = Path(os.getcwd()) / 'data'
 
 def parse_arguments():
     """Parse command line arguments for wifi-bf tool."""
@@ -30,7 +32,7 @@ def parse_arguments():
     args = parser.parse_args()
 
     # Validate file path if provided
-    if args.file and not os.path.isfile(args.file):
+    if args.file and not os.path.isfile(DATA_DIR / args.file):
         parser.error(f"File not found: {args.file}")
 
     return args
