@@ -1,7 +1,7 @@
 from src.argument import parse_arguments
 from src.util import clear, display_header
 from src.password import get_local_passwords
-from src.scan import scan_wifi_networks
+from src.scan import find_available_networks
 from src.target import display_wifi_networks, select_wifi_network
 from src.brute_force import brute_force
 
@@ -13,7 +13,7 @@ def main():
 
     args = parse_arguments()
 
-    networks, security_type = scan_wifi_networks()
+    networks, security_type = find_available_networks()
 
     display_wifi_networks(networks, security_type)
 
