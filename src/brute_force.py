@@ -1,4 +1,4 @@
-from src.connect import connect_to_wifi_macos
+from src.connect import connect_to_network
 from src.util import Color
 import time
 
@@ -20,7 +20,7 @@ def brute_force(selected_network, passwords, args):
             )
 
         if len(decoded_line) >= 8:
-            success, message = connect_to_wifi_macos(selected_network, decoded_line)
+            success, message = connect_to_network(selected_network, decoded_line)
 
             if success:
                 print(
