@@ -2,7 +2,8 @@ import argparse
 import os
 from pathlib import Path
 
-DATA_DIR = Path(os.getcwd()) / 'data'
+DATA_DIR = Path(os.getcwd()) / "data"
+
 
 def parse_arguments():
     """Parse command line arguments for wifi-bf tool."""

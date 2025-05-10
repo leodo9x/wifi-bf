@@ -3,6 +3,7 @@ from src.util import Color
 import time
 from typing import List, Any
 
+
 def brute_force(selected_network: str, passwords: List[Any], args) -> bool:
     """
     Attempt to connect to a WiFi network by trying multiple passwords.

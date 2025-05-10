@@ -2,8 +2,8 @@ import os
 from pathlib import Path
 from typing import List, Optional, Union
 
-DATA_DIR = Path(os.getcwd()) / 'data'
-PASSWORD_PATH = DATA_DIR / 'passwords.txt'
+DATA_DIR = Path(os.getcwd()) / "data"
+PASSWORD_PATH = DATA_DIR / "passwords.txt"
 
 
 def ensure_data_directory() -> bool:
@@ -76,7 +76,7 @@ def read_passwords() -> Optional[List[str]]:
         return None
 
     if PASSWORD_PATH.stat().st_size == 0:
-        print(f"Error: Password file is empty")
+        print("Error: Password file is empty")
         return None
 
     try:
@@ -101,7 +101,7 @@ def read_passwords() -> Optional[List[str]]:
         print("Check file permissions or try running with higher privileges.")
         return None
     except UnicodeDecodeError:
-        print(f"Error: File contains invalid characters - trying alternative encoding")
+        print("Error: File contains invalid characters - trying alternative encoding")
         # Fallback to Latin-1 encoding which can handle any byte sequence
         try:
             with open(PASSWORD_PATH, "r", encoding="latin-1") as file:

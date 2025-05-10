@@ -24,26 +24,32 @@ def get_active_wifi_interface() -> Optional[str]:
         # Fallback to command line if no interfaces found
         result = subprocess.run(
             ["networksetup", "-listallhardwareports"],
-            capture_output=True, text=True, timeout=3
+            capture_output=True,
+            text=True,
+            timeout=3,
         )
 
         # Find Wi-Fi interface name
         lines = result.stdout.splitlines()
         for i, line in enumerate(lines):
-            if "Wi-Fi" in line and i+1 < len(lines) and "Device" in lines[i+1]:
-                interface = lines[i+1].split(":")[1].strip()
+            if "Wi-Fi" in line and i + 1 < len(lines) and "Device" in lines[i + 1]:
+                interface = lines[i + 1].split(":")[1].strip()
 
                 # Check if this interface is enabled
                 power_result = subprocess.run(
                     ["networksetup", "-getairportpower", interface],
-                    capture_output=True, text=True, timeout=3
+                    capture_output=True,
+                    text=True,
+                    timeout=3,
                 )
 
                 if "On" in power_result.stdout:
                     return interface
                 else:
                     print(f"Wi-Fi is disabled on {interface}. Enabling...")
-                    subprocess.run(["networksetup", "-setairportpower", interface, "on"])
+                    subprocess.run(
+                        ["networksetup", "-setairportpower", interface, "on"]
+                    )
                     time.sleep(1)  # Wait for Wi-Fi to enable
                     return interface
 
@@ -79,7 +85,9 @@ def find_available_networks() -> Tuple[List[str], List[str]]:
         interface = wifi_client.interfaceWithName_(interface_name)
 
         if not interface:
-            print(f"No Wi-Fi interface found for {interface_name}. Ensure Wi-Fi is enabled.")
+            print(
+                f"No Wi-Fi interface found for {interface_name}. Ensure Wi-Fi is enabled."
+            )
             sys.exit(1)
 
         # Retry scan with exponential backoff
@@ -97,7 +105,7 @@ def find_available_networks() -> Tuple[List[str], List[str]]:
                 networks, error = interface.scanForNetworksWithName_error_(None, None)
 
                 if error:
-                    wait_time = 2 ** attempt  # Exponential backoff: 1, 2, 4 seconds
+                    wait_time = 2**attempt  # Exponential backoff: 1, 2, 4 seconds
                     print(f"Scan attempt {attempt + 1} failed: {error}")
 
                     if attempt < max_attempts - 1:
@@ -120,14 +128,21 @@ def find_available_networks() -> Tuple[List[str], List[str]]:
                     # Get security type safely
                     security_type = "Unknown"
                     security_methods = [
-                        "securityMode", "security", "wlanSecurityMode", "rsn"
+                        "securityMode",
+                        "security",
+                        "wlanSecurityMode",
+                        "rsn",
                     ]
 
                     for method in security_methods:
                         if hasattr(network, method):
                             try:
                                 security_attr = getattr(network, method)
-                                security_value = security_attr() if callable(security_attr) else security_attr
+                                security_value = (
+                                    security_attr()
+                                    if callable(security_attr)
+                                    else security_attr
+                                )
                                 if security_value is not None:
                                     security_type = str(security_value)
                                     break
@@ -144,7 +159,7 @@ def find_available_networks() -> Tuple[List[str], List[str]]:
             except Exception as e:
                 print(f"Error during scan attempt {attempt + 1}: {e}")
                 if attempt < max_attempts - 1:
-                    time.sleep(2 ** attempt)
+                    time.sleep(2**attempt)
 
         # All attempts failed
         if not network_list:

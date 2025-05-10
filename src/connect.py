@@ -3,6 +3,7 @@ import subprocess
 from typing import Tuple, Optional
 import re
 
+
 def connect_to_network(ssid: str, password: str) -> Tuple[bool, str]:
     """
     Connect to a WiFi network on macOS.
@@ -40,10 +41,12 @@ def _detect_wifi_interface() -> Optional[str]:
         # Fallback to networksetup
         result = subprocess.run(
             ["networksetup", "-listallhardwareports"],
-            capture_output=True, text=True, timeout=2
+            capture_output=True,
+            text=True,
+            timeout=2,
         )
 
-        match = re.search(r'Wi-Fi\n.*Device:\s*(\w+)', result.stdout)
+        match = re.search(r"Wi-Fi\n.*Device:\s*(\w+)", result.stdout)
         return match.group(1) if match else None
 
     except Exception as e:
@@ -51,7 +54,9 @@ def _detect_wifi_interface() -> Optional[str]:
         return None
 
 
-def _establish_wifi_connection(interface: str, ssid: str, password: str) -> Tuple[bool, str]:
+def _establish_wifi_connection(
+    interface: str, ssid: str, password: str
+) -> Tuple[bool, str]:
     """
     Attempt to connect to the WiFi network
 
@@ -65,11 +70,7 @@ def _establish_wifi_connection(interface: str, ssid: str, password: str) -> Tupl
     """
     try:
         connect_cmd = ["networksetup", "-setairportnetwork", interface, ssid, password]
-        result = subprocess.run(
-            connect_cmd,
-            capture_output=True,
-            text=True
-        )
+        result = subprocess.run(connect_cmd, capture_output=True, text=True)
 
         if not result.stdout:
             return True, f"Successfully connected to {ssid}"

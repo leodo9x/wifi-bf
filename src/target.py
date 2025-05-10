@@ -2,6 +2,7 @@ import os
 import sys
 from typing import List
 
+
 def display_wifi_networks(networks: List[str], security_type: List[str]) -> None:
     """
     Display a formatted list of available WiFi networks with their security types.
