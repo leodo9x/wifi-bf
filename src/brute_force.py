@@ -1,45 +1,50 @@
 from src.connect import connect_to_network
 from src.util import Color
 import time
+from typing import List, Any
 
+def brute_force(selected_network: str, passwords: List[Any], args) -> bool:
+    """
+    Attempt to connect to a WiFi network by trying multiple passwords.
 
-def brute_force(selected_network, passwords, args):
-    print("\nWifi-bf is running")
+    Args:
+        selected_network: The SSID of the target WiFi network
+        passwords: List of passwords to try
+        args: Command-line arguments including verbose flag
 
-    for password in passwords:
-        password = password.strip()
+    Returns:
+        bool: True if connection successful, False otherwise
+    """
+    print(f"\nStarting WiFi brute-force attempt for {selected_network}...")
 
-        if isinstance(password, str):
-            decoded_line = password
-        else:
-            decoded_line = password.decode("utf-8")
+    for i, password in enumerate(passwords):
+        try:
+            password = str(password).strip()
 
-        if args.verbose:
-            print(
-                f"{Color.HEADER}** TESTING **: with password '{decoded_line}'{Color.END}"
-            )
+            if len(password) < 8:
+                if args.verbose:
+                    print(Color.CYAN(f"{password} too short. Skip!!!"))
+                continue
 
-        if len(decoded_line) >= 8:
-            success, message = connect_to_network(selected_network, decoded_line)
+            if args.verbose:
+                print(Color.HEADER(f"Testing password: {password}"))
+
+            success, message = connect_to_network(selected_network, password)
 
             if success:
-                print(
-                    f"{Color.GREEN}** KEY FOUND! **: password '{decoded_line}' succeeded.{Color.END}"
-                )
+                print(Color.GREEN(f"Success! Password found: {password}"))
                 return True
-            else:
-                if args.verbose:
-                    print(
-                        f"{Color.FAIL}** TESTING **: password '{decoded_line}' failed.{Color.END}"
-                    )
-                    print(f"{Color.GRAY}{message}{Color.END}")
 
-                time.sleep(1)
-        else:
             if args.verbose:
-                print(
-                    f"{Color.CYAN}** TESTING **: password '{decoded_line}' too short, passing.{Color.END}"
-                )
+                print(Color.FAIL(f"{message}"))
 
-    print(f"{Color.FAIL}** RESULTS **: All passwords failed :({Color.END}")
+            # Adaptive delay to prevent overwhelming the network
+            time.sleep(0.5 if i % 10 == 0 else 0.2)
+
+        except (UnicodeDecodeError, AttributeError) as e:
+            if args.verbose:
+                print(Color.WARNING(f"Invalid password format: {password} ({str(e)})"))
+            continue
+
+    print(Color.FAIL(f"All passwords failed for {selected_network}"))
     return False
