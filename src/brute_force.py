@@ -1,5 +1,5 @@
-from connect import connect_to_wifi_macos
-from util import Color
+from src.connect import connect_to_wifi_macos
+from src.util import Color
 import time
 
 def brute_force(selected_network, passwords, args):
