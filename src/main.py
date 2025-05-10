@@ -1,5 +1,5 @@
 from argument import parse_arguments
-from util import clear, header
+from util import clear, display_header
 from password import get_local_passwords
 from scan import scan_wifi_networks
 from target import display_targets, prompt_for_target_choice
@@ -8,7 +8,7 @@ from brute_force import brute_force
 def main():
     clear()
 
-    header()
+    display_header()
 
     args = parse_arguments()
 

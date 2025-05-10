@@ -1,5 +1,5 @@
 from connect import connect_to_wifi_macos
-from util import bcolors
+from util import Color
 import time
 
 def brute_force(selected_network, passwords, args):
@@ -14,23 +14,23 @@ def brute_force(selected_network, passwords, args):
             decoded_line = password.decode("utf-8")
 
         if args.verbose:
-            print(f"{bcolors.HEADER}** TESTING **: with password '{decoded_line}'{bcolors.ENDC}")
+            print(f"{Color.HEADER}** TESTING **: with password '{decoded_line}'{Color.END}")
 
         if len(decoded_line) >= 8:
             success, message = connect_to_wifi_macos(selected_network, decoded_line)
 
             if success:
-                print(f"{bcolors.OKGREEN}** KEY FOUND! **: password '{decoded_line}' succeeded.{bcolors.ENDC}")
+                print(f"{Color.GREEN}** KEY FOUND! **: password '{decoded_line}' succeeded.{Color.END}")
                 return True
             else:
                 if args.verbose:
-                    print(f"{bcolors.FAIL}** TESTING **: password '{decoded_line}' failed.{bcolors.ENDC}")
-                    print(f"{bcolors.VERBOSEGRAY}{message}{bcolors.ENDC}")
+                    print(f"{Color.FAIL}** TESTING **: password '{decoded_line}' failed.{Color.END}")
+                    print(f"{Color.GRAY}{message}{Color.END}")
 
                 time.sleep(1)
         else:
             if args.verbose:
-                print(f"{bcolors.OKCYAN}** TESTING **: password '{decoded_line}' too short, passing.{bcolors.ENDC}")
+                print(f"{Color.CYAN}** TESTING **: password '{decoded_line}' too short, passing.{Color.END}")
 
-    print(f"{bcolors.FAIL}** RESULTS **: All passwords failed :({bcolors.ENDC}")
+    print(f"{Color.FAIL}** RESULTS **: All passwords failed :({Color.END}")
     return False
