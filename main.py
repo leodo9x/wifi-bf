@@ -5,6 +5,7 @@ from src.scan import scan_wifi_networks
 from src.target import display_targets, prompt_for_target_choice
 from src.brute_force import brute_force
 
+
 def main():
     clear()
 
@@ -23,6 +24,7 @@ def main():
     passwords = get_local_passwords(args)
 
     brute_force(target, passwords, args)
+
 
 if __name__ == "__main__":
     main()

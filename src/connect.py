@@ -1,6 +1,7 @@
 from CoreWLAN import CWWiFiClient
 import subprocess
 
+
 def connect_to_wifi_macos(ssid, password):
     """Connect to WiFi network using macOS networksetup command"""
     try:
@@ -16,13 +17,7 @@ def connect_to_wifi_macos(ssid, password):
             return False, "Network not visible"
 
         # Try to connect
-        connect_cmd = [
-            "networksetup",
-            "-setairportnetwork",
-            "en0",
-            ssid,
-            password
-        ]
+        connect_cmd = ["networksetup", "-setairportnetwork", "en0", ssid, password]
 
         result = subprocess.run(connect_cmd, capture_output=True, text=True)
         if result.stdout and f"Failed to join network {ssid}" in result.stdout:

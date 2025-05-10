@@ -3,10 +3,13 @@ import time
 import subprocess
 import sys
 
+
 def check_wifi_status():
     """Check if Wi-Fi is enabled and return the interface name."""
     try:
-        result = subprocess.run(["networksetup", "-getairportpower", "en0"], capture_output=True, text=True)
+        result = subprocess.run(
+            ["networksetup", "-getairportpower", "en0"], capture_output=True, text=True
+        )
         if "Wi-Fi Power (en0): On" in result.stdout:
             return "en0"
         else:
@@ -17,6 +20,7 @@ def check_wifi_status():
     except Exception as e:
         print(f"Error checking Wi-Fi status: {e}")
         return None
+
 
 def scan_wifi_networks():
     print("Scanning for WiFi networks...")
@@ -32,7 +36,9 @@ def scan_wifi_networks():
         interface = wifi_client.interfaceWithName_(interface_name)
 
         if not interface:
-            print(f"No Wi-Fi interface found for {interface_name}. Ensure Wi-Fi is enabled.")
+            print(
+                f"No Wi-Fi interface found for {interface_name}. Ensure Wi-Fi is enabled."
+            )
             return
 
         # Retry scan up to 3 times to handle 'Resource busy' errors
@@ -54,19 +60,29 @@ def scan_wifi_networks():
                 print("- No networks are in range.")
                 print("- Wi-Fi hardware issue or macOS restrictions.")
                 print("To check Location Services:")
-                print("1. Go to System Settings > Privacy & Security > Location Services.")
-                print("2. Ensure Location Services is enabled and Terminal (or your IDE) is allowed.")
-                print("3. Reset permissions if needed: tccutil reset Location com.apple.terminal")
+                print(
+                    "1. Go to System Settings > Privacy & Security > Location Services."
+                )
+                print(
+                    "2. Ensure Location Services is enabled and Terminal (or your IDE) is allowed."
+                )
+                print(
+                    "3. Reset permissions if needed: tccutil reset Location com.apple.terminal"
+                )
                 sys.exit(-1)
 
             # Process and print network information
             for network in networks:
                 if network.ssid():  # Skip networks with no SSID
                     # Avoid accessing 'security' attribute due to API changes
-                    security_type = ''
+                    security_type = ""
                     try:
                         # Check if security info is available via other means (optional)
-                        security_type = network.securityMode() if hasattr(network, 'securityMode') else "Unknown"
+                        security_type = (
+                            network.securityMode()
+                            if hasattr(network, "securityMode")
+                            else "Unknown"
+                        )
                     except AttributeError:
                         security_type = "Not available"
                     networkList.append(network.ssid())
@@ -80,4 +96,6 @@ def scan_wifi_networks():
         print(f"An error occurred: {e}")
         print("Ensure 'pyobjc' is installed and Location Services are enabled.")
         print("To install pyobjc: pip install pyobjc")
-        print("To check Location Services: System Settings > Privacy & Security > Location Services")
+        print(
+            "To check Location Services: System Settings > Privacy & Security > Location Services"
+        )

@@ -1,10 +1,11 @@
 import os
 import sys
 
+
 def display_targets(networks, security_type):
     print("Select a target: \n")
     try:
-        rows, columns = os.popen('stty size', 'r').read().split()
+        rows, columns = os.popen("stty size", "r").read().split()
         columns = int(columns)
         for i in range(len(networks)):
             # Ensure all components are strings
@@ -31,13 +32,14 @@ def display_targets(networks, security_type):
         print(f"Error displaying targets: {e}")
         sys.exit(-1)
 
+
 def prompt_for_target_choice(max):
     while True:
         try:
             selected = int(input("\nEnter number of target: "))
-            if(selected >= 1 and selected <= max):
+            if selected >= 1 and selected <= max:
                 return selected - 1
-        except Exception as e:
+        except Exception:
             pass
 
         print("Invalid choice: Please pick a number between 1 and " + str(max))
