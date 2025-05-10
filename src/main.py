@@ -1,4 +1,4 @@
-from argument import argument_parser
+from argument import parse_arguments
 from util import clear, header
 from password import get_local_passwords
 from scan import scan_wifi_networks
@@ -10,7 +10,7 @@ def main():
 
     header()
 
-    args = argument_parser()
+    args = parse_arguments()
 
     networks, security_type = scan_wifi_networks()
 
