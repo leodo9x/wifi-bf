@@ -1,9 +1,9 @@
-from argument import parse_arguments
-from util import clear, display_header
-from password import get_local_passwords
-from scan import scan_wifi_networks
-from target import display_targets, prompt_for_target_choice
-from brute_force import brute_force
+from src.argument import parse_arguments
+from src.util import clear, display_header
+from src.password import get_local_passwords
+from src.scan import scan_wifi_networks
+from src.target import display_targets, prompt_for_target_choice
+from src.brute_force import brute_force
 
 def main():
     clear()

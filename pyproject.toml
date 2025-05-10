@@ -1,0 +1,9 @@
+[project]
+name = "wifi-bf"
+version = "0.1.0"
+description = "A native Python3 WiFi brute-force attack tool using common passwords"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "pyobjc>=11.0",
+]
